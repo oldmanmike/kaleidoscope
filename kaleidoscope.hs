@@ -49,7 +49,7 @@ myBorderWidth = 2
 myModMask = controlMask
 myWorkspaces = ["$","chat","dev","doc","log","music","monitor"]
 myNormalBorderColor = "grey"
-myFocusedBorderColor = "red"
+myFocusedBorderColor = "green"
 
 
 -- Dzen
@@ -149,7 +149,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         -- BOTTOM ROW (PROGRAMMER DVORAK)
         --, ((modm                    , xK_colon )        , return ())
         --, ((modm .|. mod1Mask       , xK_colon )        , return ())
-        , ((modm                    , xK_q )            , spawn "xmonad --recompile" >> io EH.sendRestart)
+        , ((modm                    , xK_q )            , restart "/home/oldmanmike/.xmonad/xmonad-x86_64-linux" True)
         , ((modm .|. mod1Mask       , xK_q )            , io (exitWith ExitSuccess))
         , ((modm                    , xK_j )            , windows W.focusDown)
         , ((modm .|. mod1Mask       , xK_j )            , windows W.swapDown)
@@ -256,8 +256,9 @@ main = EH.withCustomHelper kaleidoscopeConfig
     , EH.compile = \force -> EH.withLock ExitSuccess $ do
         let cmd =
               if force
-                then "cd /home/oldmanmike/src/github.com/oldmanmike/kaleidoscope && stack build"
+                then "cd /home/oldmanmike/src/github.com/oldmanmike/kaleidoscope && stack clean && stack build"
                 else "cd /home/oldmanmike/src/github.com/oldmanmike/kaleidoscope && stack build"
         EH.compileUsingShell cmd
+    , EH.postCompile = EH.defaultPostCompile
     }
 
