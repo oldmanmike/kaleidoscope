@@ -21,7 +21,7 @@ library
 
 executable xmonad
   main-is:              kaleidoscope.hs
-  ghc-options:          -threaded -rtsopts -with-rtsopts=-N
+  ghc-options:          -O2
   build-depends:        base,
                         containers,
                         kaleidoscope,
