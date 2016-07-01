@@ -1,8 +1,8 @@
 -------------------------------
--- File:    kaleidoscope.hs
--- Version: 0.2
+-- File:    xmonad.hs
+-- Version: 0.3
 -- Author:  Michael Carpenter
--- Date:    6/8/13
+-- Date:    6/30/16
 -------------------------------
 
 -- Core
@@ -15,6 +15,7 @@ import qualified Data.Map as M
 -- Actions
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicWorkspaces
+import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.TopicSpace
 -- Layouts
 import XMonad.Layout.Circle
@@ -37,7 +38,6 @@ import XMonad.Prompt.Workspace
 import XMonad.Prompt.Window
 import XMonad.Prompt.XMonad
 -- Utils
-import qualified  XMonad.Util.EntryHelper as EH
 import XMonad.Util.Paste
 import XMonad.Util.Run
 
@@ -126,11 +126,13 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
         --, ((modm                    , xK_a )            , return ())
         --, ((modm .|. mod4Mask       , xK_a )            , return ())
         , ((modm                    , xK_o )            , shellPrompt def)
-        --, ((modm .|. mod4Mask       , xK_o )            , return ())
+        , ((modm .|. mod4Mask       , xK_o )            , viewScreen (P 1))
         , ((modm                    , xK_e )            , moveTo Prev NonEmptyWS)
-        , ((modm .|. mod1Mask       , xK_e )            , shiftToPrev >> prevWS)
+        , ((modm .|. mod1Mask       , xK_e )            , viewScreen (P 2))
+        , ((modm .|. mod4Mask       , xK_e )            , shiftToPrev >> prevWS)
         , ((modm                    , xK_u )            , moveTo Next NonEmptyWS)
-        , ((modm .|. mod1Mask       , xK_u )            , shiftToNext >> nextWS)
+        --, ((modm .|. mod1Mask       , xK_u )            , shiftToNext >> nextWS)
+        , ((modm .|. mod4Mask       , xK_u )            , shiftToNext >> nextWS)
         --, ((modm                    , xK_i )            , return ())
         --, ((modm .|. mod1Mask       , xK_i )            , return ())
         , ((modm                    , xK_d )            , kill)
@@ -224,8 +226,8 @@ myEventHook = undefined
 
 myStartupHook = undefined
 
-kaleidoscope :: IO ()
-kaleidoscope = do
+main :: IO ()
+main = do
   statBar <- spawnPipe myXMobar
   xmonad def
     { terminal            = myTerminal
@@ -247,18 +249,3 @@ kaleidoscope = do
     , logHook             = myLogHook statBar >> setWMName "LG3D"
     --, startupHook         = myStartupHook
     }
-
-main :: IO ()
-main = EH.withCustomHelper kaleidoscopeConfig
-  where
-  kaleidoscopeConfig = EH.defaultConfig
-    { EH.run = kaleidoscope
-    , EH.compile = \force -> EH.withLock ExitSuccess $ do
-        let cmd =
-              if force
-                then "cd /home/oldmanmike/src/github.com/oldmanmike/kaleidoscope && stack clean && stack build"
-                else "cd /home/oldmanmike/src/github.com/oldmanmike/kaleidoscope && stack build"
-        EH.compileUsingShell cmd
-    , EH.postCompile = EH.defaultPostCompile
-    }
-
