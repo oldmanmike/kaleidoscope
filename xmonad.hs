@@ -47,7 +47,7 @@ myTerminal = "urxvtc"
 myFocusFollowsMouse = True
 myBorderWidth = 2
 myModMask = controlMask
-myWorkspaces = ["$","chat","dev","doc","log","music","monitor"]
+myWorkspaces = ["$"]
 myNormalBorderColor = "grey"
 myFocusedBorderColor = "green"
 
